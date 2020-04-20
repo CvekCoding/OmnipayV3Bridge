@@ -92,6 +92,12 @@ class OffsiteCaptureAction extends BaseApiAwareAction implements GatewayAwareInt
             $response = $this->omnipayGateway->purchase($details->toUnsafeArray())->send();
 
             $details['transactionReference'] = $response->getTransactionReference();
+            $data = $response->getData();
+            if (is_array($data)) {
+                $details->replace($data);
+            } else {
+                $details['_data'] = $data;
+            }
         }
 
         /** @var \Omnipay\Common\Message\AbstractResponse $response */
